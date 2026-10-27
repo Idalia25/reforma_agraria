@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="es" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google" content="notranslate">
+    <title>Desafío Histórico: Reforma Agraria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            overflow: hidden;
+            background-color: #052e16;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(-25%); animation-timing-function: cubic-bezier(0.8,0,1,1); }
+            50% { transform: none; animation-timing-function: cubic-bezier(0,0,0.2,1); }
+        }
+
+        .animate-bounce-custom {
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes pulse-heart {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+
+        .heart-active {
+            color: #ef4444;
+            fill: #ef4444;
+            animation: pulse-heart 1.5s infinite;
+        }
+
+        .heart-inactive {
+            color: #d1d5db;
+            fill: none;
+        }
+
+        .no-select {
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Estilo para la barra de desplazamiento del autocompletado */
+        #autocomplete-list::-webkit-scrollbar {
+            width: 8px;
+        }
+        #autocomplete-list::-webkit-scrollbar-track {
+            background: #f1f5f9; 
+            border-radius: 10px;
+        }
+        #autocomplete-list::-webkit-scrollbar-thumb {
+            background: #cbd5e1; 
+            border-radius: 10px;
+        }
+        #autocomplete-list::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8; 
+        }
+
+        /* Scrollbar elegante y oscuro para la tabla del Leaderboard */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #052e16; 
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #166534; 
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #15803d; 
+        }
+    </style>
+</head>
+<body class="no-select text-slate-800">
+
+    <!-- INDICADOR DE MODO SIN CONEXIÓN -->
+    <div id="offline-badge" class="hidden absolute top-4 left-4 z-50 bg-red-600/90 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg backdrop-blur-sm border border-red-400 flex items-center space-x-2 animate-pulse">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path><line x1="2" y1="2" x2="22" y2="22"></line></svg>
+        <span id="offline-text">Modo Desconectado (Solo Local)</span>
+    </div>
+
+    <!-- FONDOS DECORATIVOS -->
+    <div id="bg-decorations" class="hidden">
+        <div class="fixed top-[-10%] left-[-10%] w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+        <div class="fixed bottom-[-10%] right-[-10%] w-[40rem] h-[40rem] bg-lime-500/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+    </div>
+
+    <!-- PANTALLA DE BIENVENIDA -->
+    <div id="welcome-screen" class="min-h-screen w-full bg-gradient-to-br from-emerald-950 via-green-900 to-teal-950 flex flex-col items-center justify-center p-6 text-white absolute inset-0 z-10 transition-opacity duration-300 overflow-y-auto">
+        
+        <div class="flex flex-col lg:flex-row items-center lg:items-stretch justify-center gap-8 w-full max-w-6xl z-10 my-auto mt-12 md:mt-auto">
+            
+            <!-- PANEL IZQUIERDO: Inicio del juego -->
+            <div class="max-w-2xl w-full text-center space-y-8 p-8 md:p-10 bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/20 animate-fade-in-up flex flex-col justify-center">
+                <div class="inline-block p-4 bg-gradient-to-tr from-emerald-500 to-lime-400 rounded-full shadow-lg mx-auto w-max">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </div>
+                <h1 class="text-5xl md:text-7xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-emerald-200 via-lime-200 to-teal-200 drop-shadow-sm">
+                    Reforma Agraria
+                </h1>
+                <h2 class="text-2xl md:text-3xl font-semibold text-emerald-200">
+                    ¡Desafío de Ciencias Sociales!
+                </h2>
+                <p class="text-lg text-emerald-100/80 max-w-md mx-auto hidden md:block">
+                    Domina el vocabulario y conceptos clave del proceso de la Reforma Agraria. ¡Más de 200 preguntas educativas!
+                </p>
+
+                <div class="max-w-sm mx-auto w-full mt-4 mb-4 relative text-left">
+                    <input type="text" id="player-name" autocomplete="off" placeholder="Ingresa tu nombre para comenzar..." class="w-full px-6 py-4 rounded-full text-slate-800 font-bold text-xl text-center focus:outline-none focus:ring-4 focus:ring-emerald-400 shadow-inner" maxlength="50">
+                    
+                    <!-- MENU DESPLEGABLE DE AUTOCOMPLETADO -->
+                    <ul id="autocomplete-list" class="hidden absolute top-[110%] left-0 right-0 bg-white rounded-2xl shadow-2xl border border-slate-200 max-h-48 overflow-y-auto z-50 text-base font-semibold">
+                    </ul>
+
+                    <p id="name-error" class="hidden text-red-300 font-semibold mt-2 drop-shadow-md text-center">¡Por favor selecciona un nombre válido de la lista!</p>
+                </div>
+
+                <div class="flex flex-col items-center space-y-4">
+                    <button onclick="startGame()" class="group relative px-8 py-4 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-full font-bold text-xl md:text-2xl shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 active:scale-95 flex items-center justify-center mx-auto space-x-3 overflow-hidden">
+                        <span class="absolute inset-0 w-full h-full bg-white/20 group-hover:animate-pulse"></span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        <span>Iniciar Juego</span> 
+                    </button>
+                    <p class="text-white/60 text-sm font-medium tracking-wide">
+                        Developed by: Idalia Tellería Vargas
+                    </p>
+                </div>
+            </div>
+
+            <!-- PANEL DERECHO: Mini Tabla de Posiciones -->
+            <div class="w-full lg:w-80 bg-black/30 backdrop-blur-lg rounded-3xl shadow-2xl border border-white/10 animate-fade-in-up p-6 flex flex-col relative overflow-hidden" style="animation-delay: 0.1s;">
+                <div class="absolute top-0 right-0 p-16 bg-emerald-500/10 blur-3xl rounded-full pointer-events-none"></div>
+                
+                <h3 class="text-amber-400 font-black text-2xl mb-6 flex items-center justify-center space-x-2 border-b border-white/10 pb-4 relative z-10">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"></path><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"></path><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"></path></svg>
+                    <span>Top 5 Histórico</span>
+                </h3>
+                
+                <div id="mini-leaderboard-list" class="space-y-3 text-sm flex-1 relative z-10">
+                    <p class="text-emerald-200/60 text-center mt-8">Conectando con planillas...</p>
+                </div>
+                
+                <button onclick="showLeaderboard('welcome-screen')" class="mt-6 w-full py-4 bg-emerald-700/30 hover:bg-emerald-600/50 rounded-2xl text-emerald-100 hover:text-white text-sm md:text-base font-bold transition-all border border-emerald-500/30 relative z-10 shadow-lg">
+                    Ver Tabla Global Completa
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- PANTALLA DE CONTEO REGRESIVO -->
+    <div id="countdown-screen" class="hidden min-h-screen w-full bg-slate-950 flex items-center justify-center text-white absolute inset-0 z-20">
+        <div class="text-center">
+            <h1 id="countdown-text" class="text-9xl md:text-[12rem] font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-lime-400 animate-bounce-custom drop-shadow-[0_0_30px_rgba(52,211,153,0.5)]">
+                3
+            </h1>
+        </div>
+    </div>
+
+    <!-- PANTALLA DE JUEGO -->
+    <div id="playing-screen" class="hidden min-h-screen w-full bg-slate-50 flex flex-col absolute inset-0 z-10 overflow-y-auto">
+        
+        <!-- Encabezado -->
+        <header class="w-full bg-white shadow-sm p-4 flex justify-between items-center z-10 sticky top-0">
+            <div class="flex items-center space-x-2">
+                <div id="level-display" class="bg-emerald-100 text-emerald-800 px-4 py-2 rounded-full font-black text-lg shadow-inner">
+                    Nivel 1
+                </div>
+            </div>
+
+            <button onclick="stopGame()" class="text-gray-400 hover:text-red-500 transition-colors p-2" title="Detener Juego">
+                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            </button>
+
+            <div class="flex items-center space-x-6">
+                <div id="hearts-container" class="flex items-center space-x-1">
+                    <!-- Vidas generadas por JS -->
+                </div>
+                <div class="text-2xl font-black text-slate-700">
+                    <span id="score-display">0</span> <span class="text-sm font-medium text-slate-500">PTS</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Barra del Temporizador -->
+        <div class="w-full bg-slate-200 h-2 z-10 relative">
+            <div id="timer-bar" class="bg-gradient-to-r from-emerald-400 to-green-500 h-2 transition-all duration-100 ease-linear" style="width: 100%"></div>
+        </div>
+        <div class="w-full text-center absolute top-20 z-10 pointer-events-none">
+            <span id="timer-text" class="text-xl font-black text-slate-400 drop-shadow-sm hidden">15s</span>
+        </div>
+
+        <!-- Área Principal del Juego -->
+        <main class="flex-1 flex flex-col items-center justify-center p-4 w-full max-w-4xl mx-auto relative z-0">
+            
+            <!-- Retroalimentación / Mensaje flotante -->
+            <div id="feedback-overlay" class="hidden absolute inset-0 z-30 flex items-center justify-center pointer-events-none">
+                <h2 id="feedback-text" class="text-4xl md:text-6xl font-black drop-shadow-2xl animate-bounce-custom text-center text-white bg-emerald-600 px-8 py-4 rounded-full border-4 border-white shadow-2xl inline-block">
+                    ¡Excelente!
+                </h2>
+            </div>
+
+            <!-- Tarjeta de Pregunta -->
+            <div id="question-card" class="w-full bg-white rounded-3xl shadow-[0_20px_50px_rgba(5,_46,_22,_0.08)] border border-emerald-100 p-6 md:p-10 flex flex-col relative overflow-hidden hidden">
+                
+                <div class="flex items-start justify-between mb-8 md:mb-12">
+                    <h2 id="question-text" class="text-2xl md:text-4xl font-bold leading-tight text-slate-800 flex-1">
+                        <!-- Pregunta inyectada por JS -->
+                    </h2>
+                    <button onclick="playCurrentAudio()" class="ml-4 p-4 bg-emerald-50 text-emerald-600 rounded-full hover:bg-emerald-100 hover:scale-110 transition-all shadow-sm active:scale-95 flex-shrink-0" title="Escuchar audio">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                    </button>
+                </div>
+
+                <!-- Opciones -->
+                <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full">
+                    <!-- Botones inyectados por JS -->
+                </div>
+
+                <!-- Sección de Pistas -->
+                <div class="mt-8 flex flex-col items-center border-t border-slate-100 pt-6 min-h-[80px]">
+                    <button id="show-hint-btn" onclick="showHint()" class="flex items-center space-x-2 text-amber-600 hover:text-amber-700 font-medium px-4 py-2 rounded-full hover:bg-amber-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>
+                        <span>Mostrar Pista</span>
+                    </button>
+                    
+                    <div id="hint-content" class="hidden bg-amber-50 text-amber-900 p-4 rounded-xl flex items-start space-x-3 w-full max-w-2xl animate-fade-in-up border border-amber-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="flex-shrink-0 mt-1 text-amber-600"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><line x1="9" y1="18" x2="15" y2="18"></line><line x1="10" y1="22" x2="14" y2="22"></line></svg>
+                        <p id="hint-text" class="text-base md:text-lg"></p>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- PANTALLA FIN DEL JUEGO -->
+    <div id="gameover-screen" class="hidden min-h-screen w-full bg-gradient-to-br from-red-950 via-slate-900 to-zinc-950 flex items-center justify-center p-6 text-white absolute inset-0 z-30">
+        <div class="max-w-md w-full text-center space-y-6 p-8 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl border border-red-500/30 animate-fade-in-up">
+            <h1 class="text-5xl font-black text-red-500 drop-shadow-md">Fin del Juego</h1>
+            <p class="text-2xl text-gray-300">Nivel Alcanzado: <span id="final-level" class="font-bold text-white">1</span></p>
+            <p class="text-2xl text-gray-300">Puntaje Final: <span id="final-score" class="font-bold text-white">0</span></p>
+            <p class="text-xl text-gray-400">Tiempo Sobrevivido: <span id="final-time" class="font-bold text-white">0</span>s</p>
+            
+            <button onclick="showLeaderboard('gameover-screen')" class="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-600 rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform active:scale-95 flex items-center justify-center space-x-2 mt-4">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"></path><path d="M5 20V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v14"></path><path d="M9 20V12h6v8"></path></svg>
+                <span>Ver Tabla de Posiciones</span>
+            </button>
+
+            <button onclick="startGame()" class="mt-4 w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl font-bold text-xl shadow-lg hover:scale-105 transition-transform active:scale-95 flex items-center justify-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                <span>Jugar de Nuevo</span>
+            </button>
+            <button onclick="stopGame()" class="w-full py-4 bg-gray-700/50 hover:bg-gray-700 rounded-2xl font-bold text-xl shadow-lg transition-colors flex items-center justify-center space-x-2">
+                <span>Menú Principal</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- TABLA DE POSICIONES GLOBAL -->
+    <div id="leaderboard-screen" class="hidden min-h-screen w-full bg-[#051f11] flex flex-col items-center p-4 md:p-8 text-white absolute inset-0 z-40 overflow-hidden">
+        
+        <div class="max-w-4xl w-full flex flex-col h-full max-h-[90vh] bg-emerald-950/80 rounded-3xl shadow-2xl border border-emerald-700/50 p-6 md:p-8 animate-fade-in-up mt-8">
+            
+            <h1 class="text-4xl md:text-5xl font-black text-center mb-6 text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-emerald-300 drop-shadow-sm shrink-0">Tabla de Posiciones Global</h1>
+            
+            <div class="bg-slate-900/90 rounded-2xl shadow-inner border border-emerald-800/40 flex-1 overflow-hidden flex flex-col relative">
+                <div class="overflow-y-auto flex-1 custom-scrollbar">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-slate-950 border-b border-emerald-800/60 sticky top-0 z-10 shadow-md">
+                            <tr class="text-emerald-400 text-xs md:text-sm uppercase tracking-widest font-bold">
+                                <th class="p-4 md:px-6 w-20">Puesto</th>
+                                <th class="p-4 md:px-6">Nombre</th>
+                                <th class="p-4 md:px-6 text-center">Puntos</th>
+                                <th class="p-4 md:px-6 text-right">Tiempo (s)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderboard-list" class="text-sm md:text-base font-semibold">
+                            <!-- Inyectado por JS -->
+                            <tr><td colspan="4" class="text-center p-6 text-emerald-300/50">Cargando registros...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="flex justify-center mt-6 shrink-0">
+                <button id="lb-back-btn" onclick="switchScreen('welcome-screen')" class="px-12 py-4 bg-emerald-800 hover:bg-emerald-700 rounded-xl font-bold text-xl shadow-lg transition-colors text-white border border-emerald-600 w-full md:w-auto">
+                    Volver
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LÓGICA EN JAVASCRIPT -->
+    <script>
+        // ==========================================
+        // SISTEMA ANTI-TRAMPA Y SEGURIDAD LOCAL
+        // ==========================================
+        
+        document.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'F12' || 
+               (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'C' || e.key === 'J')) || 
+               (e.ctrlKey && e.key === 'U')) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // URL DE SCRIPT DE GOOGLE APPS SCRIPT
+        const GOOGLE_SHEETS_URL = "https://script.google.com/macros/s/AKfycbyVhHDRuPTGhZaA1VkxE062TyFTdkCekVUfbBRXw2NLzj1lKmLVypLPnWWlsgWiiWOZ/exec"; 
+
+        // --- VARIABLES GLOBALES ---
+        let playerName = "";
+        let score = 0;
+        let lives = 5;
+        let level = 1;
+        let currentQ = null;
+        let isProcessing = false;
+
+        let questionTimeLimit = 15;
+        let currentTimer = 15;
+        let timerInterval = null;
+        let totalTimeAlive = 0;
+        let questionStartTime = 0;
+
+        let leaderboardData = []; 
+        let leaderboardPollingInterval = null;
+        let userIP = "unknown"; 
+        
+        let availableStudentNames = []; 
+
+        async function fetchUserIP() {
+            try {
+                const res = await fetch("https://api.ipify.org?format=json");
+                const data = await res.json();
+                userIP = data.ip;
+            } catch (e) {
+                console.warn("No se pudo obtener la IP");
+            }
+        }
+        fetchUserIP();
+
+        if (GOOGLE_SHEETS_URL.trim() === "") {
+            document.getElementById('offline-badge').classList.remove('hidden');
+            document.getElementById('offline-text').innerText = "URL de Google Sheets no configurada. Récords locales.";
+        }
+
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+        }
+
+        // --- LÓGICA DE AUTOCOMPLETADO DE NOMBRES ---
+        async function fetchStudentNames() {
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL + "?action=getNames");
+                const data = await response.json();
+                
+                if (Array.isArray(data) && data.length > 0) {
+                    availableStudentNames = data;
+                }
+            } catch (e) {
+                console.warn("Usando lista de respaldo para el autocompletado.");
+                availableStudentNames = [
+                    "Hugo Luque", "Maria Fernandez", "Juan Perez", "Carlos Ruiz", 
+                    "Ana Gomez", "Luis Torres", "Sofia Morales", "Jorge Ramirez"
+                ];
+            }
+        }
+        fetchStudentNames();
+
+        const playerNameInput = document.getElementById('player-name');
+        const autocompleteList = document.getElementById('autocomplete-list');
+
+        playerNameInput.addEventListener('input', function() {
+            const val = this.value;
+            autocompleteList.innerHTML = ''; 
+            
+            if (!val) {
+                autocompleteList.classList.add('hidden');
+                return;
+            }
+
+            const matches = availableStudentNames.filter(name => name.toLowerCase().includes(val.toLowerCase()));
+
+            if (matches.length > 0) {
+                autocompleteList.classList.remove('hidden');
+                matches.forEach(match => {
+                    const li = document.createElement('li');
+                    li.className = "px-6 py-4 hover:bg-emerald-50 cursor-pointer text-slate-700 border-b border-slate-100 last:border-none transition-colors";
+                    
+                    const regex = new RegExp(`(${val})`, "gi");
+                    li.innerHTML = match.replace(regex, "<span class='text-emerald-600 font-black'>$1</span>");
+                    
+                    li.addEventListener('click', function(e) {
+                        e.stopPropagation(); 
+                        playerNameInput.value = match;
+                        autocompleteList.classList.add('hidden');
+                        document.getElementById('name-error').classList.add('hidden');
+                    });
+                    
+                    autocompleteList.appendChild(li);
+                });
+            } else {
+                autocompleteList.classList.add('hidden');
+            }
+        });
+
+        document.addEventListener('click', function(e) {
+            if (e.target !== playerNameInput && e.target !== autocompleteList) {
+                autocompleteList.classList.add('hidden');
+            }
+        });
+
+        playerNameInput.addEventListener('focus', function() {
+            if (this.value && autocompleteList.childNodes.length > 0) {
+                autocompleteList.classList.remove('hidden');
+            }
+        });
+
+
+        // --- BANCO TEMÁTICO EXCLUSIVO: REFORMA AGRARIA ---
+        const VOCAB_WORDS = [
+            "Latifundio", "Minifundio", "Expropiación", "Gameronalismo", "Cooperativa", 
+            "Sinchi", "Adjudicación", "Servidumbre", "Hacienda", "Campesinado", 
+            "Iparraguirre", "Sociedad Agraria", "Tierras", "Reforma", "Decreto 17716", 
+            "Feudalismo", "Sindicato", "Yanaconaje", "Pongaje", "Velasco Alvarado", 
+            "Soberanía Alimentaria", "Colectivización", "Tierras Ociosas", "Sitos", "Estructura Agraria", 
+            "Cultura Rural", "Agronomía", "Revolución Agraria", "Desarrollo Rural", "Tenencia de la Tierra", 
+            "Propiedad Comunitaria", "Nacionalización", "Justicia Social", "Tractorización", "Industrialización", 
+            "CAP", "SAIS", "Ollanta", "Inca", "Reforma Integral"
+        ];
+
+        const HINTS = {
+            "Latifundio": "Gran extensión de tierra perteneciente a un solo propietario.",
+            "Minifundio": "Finca agrícola de extensión muy pequeña que dificulta su explotación eficiente.",
+            "Expropiación": "Transferencia de la propiedad privada al Estado con fines de interés público.",
+            "Gameronalismo": "Sistema de dominación y explotación ejercido por grandes terratenientes.",
+            "Cooperativa": "Asociación autónoma de personas unidas para gestionar colectivamente la tierra.",
+            "Sinchi": "Estructuras de seguridad y fuerzas especiales organizadas en el contexto social.",
+            "Adjudicación": "Entrega legal de tierras expropiadas a las comunidades campesinas.",
+            "Servidumbre": "Trabajo forzado no remunerado prestado por el campesino al hacendado.",
+            "Hacienda": "Finca agrícola y ganadera tradicional dominada por un terrateniente.",
+            "Campesinado": "Sector social formado por los trabajadores agrícolas y rurales.",
+            "Iparraguirre": "Actor o líder vinculado a movimientos y debates sociales agrarios.",
+            "Sociedad Agraria": "Organización económica para la producción y distribución agrícola.",
+            "Tierras": "Recurso natural central sobre el cual se aplica la redistribución agraria.",
+            "Reforma": "Transformación profunda e institucional de la estructura agraria.",
+            "Decreto 17716": "Ley promulgada en 1969 por Juan Velasco Alvarado que oficializó la Reforma Agraria.",
+            "Feudalismo": "Sistema socioeconómico caracterizado por relaciones de vasallaje y dominio rural.",
+            "Sindicato": "Organización campesina creada para defender sus derechos laborales.",
+            "Yanaconaje": "Sistema donde el campesino trabajaba una parcela del hacendado a cambio de productos.",
+            "Pongaje": "Servicio doméstico gratuito y obligatorio exigido al campesino en la hacienda.",
+            "Velasco Alvarado": "Presidente militar que lideró el Gobierno Revolucionario de las FF.AA. en 1969.",
+            "Soberanía Alimentaria": "Derecho de los pueblos a definir sus propias políticas agrarias y alimentarias.",
+            "Colectivización": "Proceso de transformación de la propiedad privada individual en propiedad común.",
+            "Tierras Ociosas": "Terrenos agrícolas sin trabajar expropiados durante la Reforma Agraria.",
+            "Sitos": "Zonas o demarcaciones territoriales asignadas para el uso agrícola.",
+            "Estructura Agraria": "Conjunto de relaciones sociales, económicas y tenencia de tierras en el campo.",
+            "Cultura Rural": "Tradiciones, conocimientos y modos de vida propios de las comunidades agrícolas.",
+            "Agronomía": "Ciencia que aplica conocimientos biológicos y físicos a la producción agrícola.",
+            "Revolución Agraria": "Cambio radical y acelerado en la distribución de la tierra y producción.",
+            "Desarrollo Rural": "Proceso de mejora en las condiciones económicas y sociales de las áreas rurales.",
+            "Tenencia de la Tierra": "Modo o régimen legal en que se posee u ocupa la tierra agrícola.",
+            "Propiedad Comunitaria": "Forma colectiva de posesión de la tierra por comunidades originarias.",
+            "Nacionalización": "Paso de bienes o industrias privadas a manos de la nación o Estado.",
+            "Justicia Social": "Principio que busca la igualdad de oportunidades y derechos en el sector rural.",
+            "Tractorización": "Introducción masiva de maquinaria pesada para modernizar el campo.",
+            "Industrialización": "Proceso de transformación de los productos agrícolas en derivados procesados.",
+            "CAP": "Centrales o Cooperativas Agrarias de Producción creadas durante el gobierno militar.",
+            "SAIS": "Sociedades Agrarias de Interés Social que agrupaban ex-haciendas y comunidades.",
+            "Ollanta": "Referencia histórica o simbólica al liderazgo indígena en los Andes.",
+            "Inca": "Símbolo cultural andino reutilizado en la propaganda de la Reforma Agraria.",
+            "Reforma Integral": "Estrategia que abarca no solo tierras, sino asistencia técnica y créditos."
+        };
+
+        const QUESTION_BANK = [
+            { q: "El término ___ hace referencia a las grandes extensiones de tierra improductivas concentradas en pocos dueños.", a: "Latifundio" },
+            { q: "Para erradicar la desigualdad en el campo, la reforma combatió directamente al ___.", a: "Latifundio" },
+            { q: "Una finca extremadamente pequeña e ineficiente para el cultivo sustentable se denomina ___.", a: "Minifundio" },
+            { q: "La fragmentación excesiva de parcelas dio lugar a la expansión del ___.", a: "Minifundio" },
+            { q: "La ___ de tierras fue el mecanismo legal para transferir haciendas privadas al Estado.", a: "Expropiación" },
+            { q: "Durante 1969, las grandes empresas azucareras del norte sufrieron la ___ de sus instalaciones.", a: "Expropiación" },
+            { q: "El fenómeno social de dominación abusiva del hacendado sobre el indígena se conoció como ___.", a: "Gameronalismo" },
+            { q: "Uno de los objetivos políticos centrales de la reforma fue destruir el poder del ___.", a: "Gameronalismo" },
+            { q: "Una ___ Agraria es una asociación donde los propios campesinos administran la tierra.", a: "Cooperativa" },
+            { q: "Los trabajadores pasaron a formar parte de una ___ de producción colectiva.", a: "Cooperativa" },
+            { q: "La ___ formal de parcelas otorgó títulos legales directos a las comunidades nativas.", a: "Adjudicación" },
+            { q: "El proceso de ___ permitió legalizar las tierras en favor de las familias rurales.", a: "Adjudicación" },
+            { q: "La ___ personal u obligatoria a favor del hacendado fue abolida por completo.", a: "Servidumbre" },
+            { q: "El fin del trabajo no pagado puso término a siglos de deprimente ___.", a: "Servidumbre" },
+            { q: "La unidad de producción agrícola tradicional dominada por un gamonal era la ___.", a: "Hacienda" },
+            { q: "Las instalaciones de la antigua ___ fueron transformadas en cooperativas de producción.", a: "Hacienda" },
+            { q: "El eslogan emblemático '¡El patrón no comerá más de tu pobreza!' estuvo dirigido al ___.", a: "Campesinado" },
+            { q: "La clase social campesina principal beneficiada con las reformas fue el ___.", a: "Campesinado" },
+            { q: "Una ___ de Interés Social (SAIS) agrupó a comunidades campesinas y ex-haciendas.", a: "Sociedad Agraria" },
+            { q: "Para reorganizar la ganadería andina se constituyó la modelo ___.", a: "Sociedad Agraria" },
+            { q: "La redistribución de las ___ agrícolas buscaba democratizar el acceso a los recursos.", a: "Tierras" },
+            { q: "La frase 'La tierra para quien la trabaja' sintetizó la lucha por las ___.", a: "Tierras" },
+            { q: "La ___ Agraria modificó el mapa económico y de tenencia en el territorio nacional.", a: "Reforma" },
+            { q: "Históricamente, la ___ transformó las estructuras de poder tradicional en el campo.", a: "Reforma" },
+            { q: "El ___ marco legal decretado el 24 de junio de 1969 inició el proceso masivo.", a: "Decreto 17716" },
+            { q: "A través del famoso ___, se declararon de utilidad pública todos los latifundios.", a: "Decreto 17716" },
+            { q: "El régimen gamonal guardaba marcadas semejanzas con el ___ feudal de Europa.", a: "Feudalismo" },
+            { q: "Muchos sociólogos caracterizaban el campo andino como una persistencia del ___.", a: "Feudalismo" },
+            { q: "El campesinado organizado comenzó a consolidarse mediante la creación del ___.", a: "Sindicato" },
+            { q: "Para exigir mejores condiciones laborales, los peones crearon su primer ___.", a: "Sindicato" },
+            { q: "La modalidad laboral en la que el campesino pagaba el arriendo con cosecha se llamó ___.", a: "Yanaconaje" },
+            { q: "El régimen de expropiaciones eliminó el trabajo bajo la condición de ___.", a: "Yanaconaje" },
+            { q: "El trabajo doméstico forzado en la casa del patrón recibía el nombre de ___.", a: "Pongaje" },
+            { q: "Las leyes agrarias prohibieron tajantemente la práctica ancestral del ___.", a: "Pongaje" },
+            { q: "General que lideró el Gobierno Revolucionario y promulgó la reforma: General ___.", a: "Velasco Alvarado" },
+            { q: "El discurso histórico del 24 de junio fue pronunciado por ___.", a: "Velasco Alvarado" },
+            { q: "Garantizar que el país abastezca sus propios alimentos se denomina ___.", a: "Soberanía Alimentaria" },
+            { q: "Uno de los propósitos a largo plazo de la reforma era la ___.", a: "Soberanía Alimentaria" },
+            { q: "El modelo económico implantado apostó por la ___ de la producción en el campo.", a: "Colectivización" },
+            { q: "La entrega de haciendas a grupos masivos aceleró la ___ de los cultivos.", a: "Colectivización" },
+            { q: "El Estado expropiaba prioritariamente aquellas parcelas calificadas como ___.", a: "Tierras Ociosas" },
+            { q: "Las haciendas sin producción suficiente eran clasificadas como ___.", a: "Tierras Ociosas" },
+            { q: "El análisis de la dominación social abarcaba el estudio de la ___ en su totalidad.", a: "Estructura Agraria" },
+            { q: "Modernizar las relaciones económicas requirió modificar la antigua ___.", a: "Estructura Agraria" },
+            { q: "La preservación de saberes locales y tradiciones populares nutre la ___.", a: "Cultura Rural" },
+            { q: "Las comunidades andinas mantuvieron vivas sus manifestaciones dentro de la ___.", a: "Cultura Rural" },
+            { q: "La aplicación de conocimientos técnicos e ingenieriles para el campo corresponde a la ___.", a: "Agronomía" },
+            { q: "Las cooperativas requirieron del soporte técnico provisto por profesionales de la ___.", a: "Agronomía" },
+            { q: "El quiebre definitivo del orden oligárquico tradicional representó una auténtica ___.", a: "Revolución Agraria" },
+            { q: "El reordenamiento de la propiedad agraria significó una marcada ___.", a: "Revolución Agraria" },
+            { q: "El acceso a créditos, carreteras y educación para el campo conforma el ___.", a: "Desarrollo Rural" },
+            { q: "Un objetivo social primordial era impulsar el progreso mediante el ___.", a: "Desarrollo Rural" },
+            { q: "El régimen o estatus legal bajo el cual los agricultores poseen su parcela es la ___.", a: "Tenencia de la Tierra" },
+            { q: "Las leyes del proceso cambiaron para siempre la forma de ___.", a: "Tenencia de la Tierra" },
+            { q: "Las comunidades originarias organizan sus cultivos bajo el modelo de ___.", a: "Propiedad Comunitaria" },
+            { q: "Se protegió jurídicamente a los ayllus mediante el reconocimiento de la ___.", a: "Propiedad Comunitaria" },
+            { q: "La ___ de insumos y complejos agroindustriales pasó el control a manos del Estado.", a: "Nacionalización" },
+            { q: "Junto con la reforma de la tierra, se impulsó la ___ de recursos clave.", a: "Nacionalización" },
+            { q: "Buscar la equidad social y la dignidad laboral del trabajador rural es principio de ___.", a: "Justicia Social" },
+            { q: "El trasfondo ético manifestado en los discursos oficiales fue la ___.", a: "Justicia Social" },
+            { q: "La incorporación de maquinaria moderna para reemplazar el arado tradicional se llamó ___.", a: "Tractorización" },
+            { q: "Se promovió el uso de tecnología mecánica impulsando la ___ del agro.", a: "Tractorización" },
+            { q: "El fortalecimiento del sector agrícola buscaba proveer insumos a la ___ nacional.", a: "Industrialización" },
+            { q: "El plan económico gubernamental vinculó el agro con el desarrollo de la ___.", a: "Industrialización" },
+            { q: "Las siglas de las Cooperativas Agrarias de Producción creadas en la costa eran ___.", a: "CAP" },
+            { q: "Las unidades productivas asociativas en los complejos azucareros fueron las ___.", a: "CAP" },
+            { q: "Las siglas de las Sociedades Agrarias de Interés Social en la sierra eran ___.", a: "SAIS" },
+            { q: "Para coordinar la producción ganadera asociativa se estructuró la modelo ___.", a: "SAIS" },
+            { q: "La figura histórica del líder Tupac Amaru II simbolizó el rescate del pasado ___.", a: "Inca" },
+            { q: "El emblema oficial utilizado por el gobierno en afiches aludía al imperio ___.", a: "Inca" },
+            { q: "Una estrategia integral requería no solo repartir campos, sino aplicar una ___.", a: "Reforma Integral" },
+            { q: "El enfoque integral abarcó crédito, tecnología y educación en la ___.", a: "Reforma Integral" }
+        ];
+
+        const feedbackSuccess = ["¡Excelente!", "¡Genial!", "¡Eres un experto!", "¡Muy bien!", "¡Maravilloso!", "¡Increíble!", "¡Espectacular!", "¡Sobresaliente!", "¡Brillante!"];
+        const feedbackFail = ["¡Qué lástima!", "¡Incorrecto!", "¡Inténtalo de nuevo!", "¡Ups!", "¡Sigue practicando!", "¡Casi!", "¡El tiempo terminó!"];
+
+        // --- FUNCIONES CENTRALES Y LÓGICA DE JUEGO ---
+        function shuffleArray(array) { return array.sort(() => Math.random() - 0.5); }
+
+        function speak(text) {
+            if ('speechSynthesis' in window) {
+                window.speechSynthesis.cancel();
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'es-ES';
+                utterance.rate = 0.9;
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        window.playCurrentAudio = function() {
+            if (!currentQ) return;
+            const textToRead = currentQ.questionText.replace("___", "espacio en blanco");
+            speak(textToRead);
+        }
+
+        window.switchScreen = function(screenId) {
+            ['welcome-screen', 'countdown-screen', 'playing-screen', 'gameover-screen', 'leaderboard-screen'].forEach(id => {
+                document.getElementById(id).classList.add('hidden');
+            });
+            document.getElementById(screenId).classList.remove('hidden');
+
+            if(screenId === 'playing-screen'){
+                document.getElementById('bg-decorations').classList.remove('hidden');
+                stopLeaderboardPolling();
+            } else if (screenId === 'welcome-screen' || screenId === 'leaderboard-screen') {
+                document.getElementById('bg-decorations').classList.add('hidden');
+                startLeaderboardPolling();
+            }
+        }
+
+        function requestFullScreen() {
+            const docElm = document.documentElement;
+            if (docElm.requestFullscreen) docElm.requestFullscreen().catch(err => console.log("Error pantalla completa:", err));
+        }
+
+        function exitFullScreen() {
+            if (document.fullscreenElement) document.exitFullscreen().catch(err => console.log("Error salir pantalla completa:", err));
+        }
+
+        function generateRandomQuestion() {
+            const qObj = QUESTION_BANK[Math.floor(Math.random() * QUESTION_BANK.length)];
+            const questionText = qObj.q;
+            const answer = qObj.a;
+            const hint = HINTS[answer] || "¡Piensa en el proceso histórico de la Reforma Agraria!";
+
+            let availableWords = VOCAB_WORDS.filter(w => w !== answer);
+            availableWords = shuffleArray(availableWords);
+            const distractors = availableWords.slice(0, 3);
+
+            const options = shuffleArray([answer, ...distractors]);
+            return { questionText, answer, options, hint };
+        }
+
+        window.startGame = function() {
+            playerName = document.getElementById('player-name').value.trim();
+            
+            // VALIDACIÓN ESTRICTA DE LA LISTA
+            const isNameValid = availableStudentNames.some(name => name.toLowerCase() === playerName.toLowerCase());
+
+            if (!playerName || !isNameValid) {
+                document.getElementById('name-error').innerText = "¡Por favor selecciona un nombre válido de la lista!";
+                document.getElementById('name-error').classList.remove('hidden');
+                return;
+            }
+            
+            document.getElementById('name-error').classList.add('hidden');
+
+            if ('speechSynthesis' in window) {
+                const silent = new SpeechSynthesisUtterance('');
+                silent.volume = 0;
+                window.speechSynthesis.speak(silent);
+            }
+            
+            requestFullScreen();
+
+            score = 0;
+            lives = 5;
+            level = 1;
+            totalTimeAlive = 0;
+            updateUI();
+
+            window.switchScreen('countdown-screen');
+            let countdown = 3;
+            const textEl = document.getElementById('countdown-text');
+            textEl.innerText = countdown;
+            speak(countdown.toString());
+
+            const interval = setInterval(() => {
+                countdown--;
+                if (countdown > 0) {
+                    textEl.innerText = countdown;
+                    speak(countdown.toString());
+                } else if (countdown === 0) {
+                    textEl.innerText = "¡YA!";
+                    speak("¡Empezamos!");
+                } else {
+                    clearInterval(interval);
+                    window.switchScreen('playing-screen');
+                    loadNewQuestion();
+                }
+            }, 1000);
+        }
+
+        window.stopGame = function() {
+            clearInterval(timerInterval);
+            exitFullScreen();
+            window.switchScreen('welcome-screen');
+            window.speechSynthesis.cancel();
+        }
+
+        function renderHearts() {
+            const container = document.getElementById('hearts-container');
+            container.innerHTML = '';
+            for(let i = 0; i < 5; i++) {
+                const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                svg.setAttribute('width', '28');
+                svg.setAttribute('height', '28');
+                svg.setAttribute('viewBox', '0 0 24 24');
+                svg.setAttribute('stroke', 'currentColor');
+                svg.setAttribute('stroke-width', '2');
+                svg.setAttribute('stroke-linecap', 'round');
+                svg.setAttribute('stroke-linejoin', 'round');
+                
+                if (i < lives) svg.setAttribute('class', 'heart-active');
+                else svg.setAttribute('class', 'heart-inactive');
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('d', 'M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z');
+                svg.appendChild(path);
+                container.appendChild(svg);
+            }
+        }
+
+        function updateUI() {
+            level = Math.floor(score / 10) + 1;
+            document.getElementById('level-display').innerText = `Nivel ${level}`;
+            document.getElementById('score-display').innerText = score;
+            renderHearts();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            questionTimeLimit = Math.max(5, 15 - (level - 1) * 1.5); 
+            currentTimer = questionTimeLimit;
+            questionStartTime = Date.now();
+            
+            const timerBar = document.getElementById('timer-bar');
+            timerBar.style.width = '100%';
+            timerBar.className = 'bg-gradient-to-r from-emerald-400 to-green-500 h-2 transition-all duration-100 ease-linear';
+
+            timerInterval = setInterval(() => {
+                if (isProcessing) return;
+                
+                const elapsed = (Date.now() - questionStartTime) / 1000;
+                currentTimer = questionTimeLimit - elapsed;
+                
+                if (currentTimer <= 0) {
+                    currentTimer = 0;
+                    clearInterval(timerInterval);
+                    timerBar.style.width = '0%';
+                    handleTimeout();
+                } else {
+                    const percentage = (currentTimer / questionTimeLimit) * 100;
+                    timerBar.style.width = percentage + '%';
+                    
+                    if (percentage < 30) {
+                        timerBar.className = 'bg-gradient-to-r from-red-500 to-pink-600 h-2 transition-all duration-100 ease-linear';
+                    } else if (percentage < 60) {
+                        timerBar.className = 'bg-gradient-to-r from-amber-400 to-orange-500 h-2 transition-all duration-100 ease-linear';
+                    }
+                }
+            }, 50);
+        }
+
+        function stopAndRecordTime() {
+            clearInterval(timerInterval);
+            const elapsed = (Date.now() - questionStartTime) / 1000;
+            totalTimeAlive += Math.min(elapsed, questionTimeLimit);
+        }
+
+        function loadNewQuestion() {
+            currentQ = generateRandomQuestion();
+            isProcessing = false;
+            
+            const parts = currentQ.questionText.split('___');
+            const qContainer = document.getElementById('question-text');
+            qContainer.innerHTML = '';
+            
+            parts.forEach((part, index) => {
+                qContainer.appendChild(document.createTextNode(part));
+                if (index < parts.length - 1) {
+                    const span = document.createElement('span');
+                    span.className = 'inline-block mx-2 w-32 md:w-48 border-b-4 border-emerald-500 align-baseline';
+                    qContainer.appendChild(span);
+                }
+            });
+
+            const optContainer = document.getElementById('options-container');
+            optContainer.innerHTML = '';
+            currentQ.options.forEach(option => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full py-5 px-6 rounded-2xl text-xl md:text-2xl font-semibold transition-all duration-200 shadow-sm border-2 bg-white border-slate-200 text-slate-700 hover:border-emerald-500 hover:shadow-md hover:text-emerald-700 hover:scale-[1.02] active:scale-[0.98] cursor-pointer';
+                btn.innerText = option;
+                btn.onclick = () => window.handleAnswer(option, btn);
+                optContainer.appendChild(btn);
+            });
+
+            document.getElementById('show-hint-btn').classList.remove('hidden');
+            document.getElementById('hint-content').classList.add('hidden');
+            document.getElementById('hint-text').innerText = currentQ.hint;
+            document.getElementById('question-card').classList.remove('hidden');
+
+            startTimer();
+
+            setTimeout(() => { window.playCurrentAudio(); }, 500);
+        }
+
+        window.showHint = function() {
+            document.getElementById('show-hint-btn').classList.add('hidden');
+            document.getElementById('hint-content').classList.remove('hidden');
+        }
+
+        window.handleAnswer = function(selectedOption, buttonElement) {
+            if (isProcessing) return;
+            isProcessing = true;
+            stopAndRecordTime();
+
+            const isCorrect = selectedOption === currentQ.answer;
+
+            const buttons = document.getElementById('options-container').querySelectorAll('button');
+            buttons.forEach(b => {
+                b.classList.remove('hover:scale-[1.02]', 'active:scale-[0.98]', 'cursor-pointer', 'hover:border-emerald-500', 'hover:text-emerald-700', 'bg-white', 'text-slate-700', 'border-slate-200');
+                b.classList.add('cursor-not-allowed');
+
+                if (b.innerText === currentQ.answer) {
+                    b.classList.add('bg-emerald-600', 'text-white', 'border-emerald-700', 'shadow-xl', 'scale-[1.02]');
+                } else if (b.innerText === selectedOption && !isCorrect) {
+                    b.classList.add('bg-red-500', 'text-white', 'border-red-600');
+                } else {
+                    b.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-200', 'opacity-80');
+                }
+            });
+
+            const overlay = document.getElementById('feedback-overlay');
+            const feedbackText = document.getElementById('feedback-text');
+
+            if (isCorrect) {
+                const msg = feedbackSuccess[Math.floor(Math.random() * feedbackSuccess.length)];
+                feedbackText.innerText = msg;
+                feedbackText.className = "text-4xl md:text-6xl font-black drop-shadow-2xl animate-bounce-custom text-center text-white bg-emerald-600 px-8 py-4 rounded-full border-4 border-white shadow-2xl inline-block";
+                overlay.classList.remove('hidden');
+                speak(msg);
+                
+                score++;
+                updateUI();
+                
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    document.getElementById('question-card').classList.add('hidden');
+                    loadNewQuestion();
+                }, 3000);
+
+            } else {
+                const msg = feedbackFail[Math.floor(Math.random() * (feedbackFail.length - 1))]; 
+                feedbackText.innerText = msg;
+                feedbackText.className = "text-4xl md:text-6xl font-black drop-shadow-2xl animate-bounce-custom text-center text-white bg-red-500 px-8 py-4 rounded-full border-4 border-white shadow-2xl inline-block";
+                overlay.classList.remove('hidden');
+                speak(msg);
+                
+                lives--;
+                updateUI();
+                
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                    if (lives <= 0) gameOver();
+                    else {
+                        document.getElementById('question-card').classList.add('hidden');
+                        loadNewQuestion();
+                    }
+                }, 3000);
+            }
+        }
+
+        function handleTimeout() {
+            if (isProcessing) return;
+            isProcessing = true;
+            stopAndRecordTime();
+            
+            const buttons = document.getElementById('options-container').querySelectorAll('button');
+            buttons.forEach(b => {
+                b.classList.remove('hover:scale-[1.02]', 'active:scale-[0.98]', 'cursor-pointer', 'hover:border-emerald-500', 'hover:text-emerald-700', 'bg-white', 'text-slate-700', 'border-slate-200');
+                b.classList.add('cursor-not-allowed');
+
+                if (b.innerText === currentQ.answer) {
+                    b.classList.add('bg-emerald-600', 'text-white', 'border-emerald-700', 'shadow-xl', 'scale-[1.02]');
+                } else {
+                    b.classList.add('bg-slate-100', 'text-slate-400', 'border-slate-200', 'opacity-80');
+                }
+            });
+
+            const msg = "¡Se agotó el tiempo!";
+            const overlay = document.getElementById('feedback-overlay');
+            const feedbackText = document.getElementById('feedback-text');
+            
+            feedbackText.innerText = msg;
+            feedbackText.className = "text-4xl md:text-6xl font-black drop-shadow-2xl animate-bounce-custom text-center text-white bg-red-500 px-8 py-4 rounded-full border-4 border-white shadow-2xl inline-block";
+            overlay.classList.remove('hidden');
+            speak(msg);
+            
+            lives--;
+            updateUI();
+            
+            setTimeout(() => {
+                overlay.classList.add('hidden');
+                if (lives <= 0) gameOver();
+                else {
+                    document.getElementById('question-card').classList.add('hidden');
+                    loadNewQuestion();
+                }
+            }, 3000);
+        }
+
+        async function gameOver() {
+            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-level').innerText = level;
+            document.getElementById('final-time').innerText = totalTimeAlive.toFixed(1);
+            
+            window.switchScreen('gameover-screen');
+            speak("Juego terminado. ¡Hiciste tu mejor esfuerzo!");
+
+            const rawName = playerName || "Desconocido";
+            const rawScore = Number(score);
+            const rawTime = Number(parseFloat(totalTimeAlive).toFixed(1));
+
+            // SISTEMA ANTI-TRAMPA DINÁMICO (-reformaAgrariaHL)
+            const _0x1a2b=["\x2D\x72\x65\x66\x6F\x72\x6D\x61\x41\x67\x72\x61\x72\x69\x61\x48\x4C","\x2D"];
+            const _0x3f5c = rawScore + _0x1a2b[1] + rawName + _0x1a2b[0];
+            const securityToken = btoa(unescape(encodeURIComponent(_0x3f5c)));
+
+            const newRecord = {
+                name: rawName,
+                score: rawScore,
+                timeAlive: rawTime,
+                ip: userIP,
+                token: securityToken
+            };
+
+            if (GOOGLE_SHEETS_URL.trim() !== "") {
+                try {
+                    await fetch(GOOGLE_SHEETS_URL, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'text/plain;charset=utf-8', 
+                        },
+                        body: JSON.stringify(newRecord)
+                    });
+                    console.log("Guardado en Google Sheets correctamente.");
+                    fetchLeaderboardData();
+                } catch (e) {
+                    console.error("No se pudo guardar en Google Sheets.", e);
+                    fallbackLocalSave(newRecord);
+                }
+            } else {
+                fallbackLocalSave(newRecord);
+            }
+        }
+
+        function fallbackLocalSave(newRecord) {
+            leaderboardData.push(newRecord);
+            leaderboardData.sort((a, b) => {
+                if (b.score !== a.score) return b.score - a.score;
+                return a.timeAlive - b.timeAlive; 
+            });
+            updateLeaderboardUI();
+        }
+
+        // --- CARGA DE DATOS DESDE GOOGLE SHEETS ---
+        async function fetchLeaderboardData() {
+            if (GOOGLE_SHEETS_URL.trim() === "") {
+                updateLeaderboardUI();
+                return;
+            }
+
+            try {
+                const response = await fetch(GOOGLE_SHEETS_URL);
+                const rawData = await response.json();
+                
+                let parsedData = [];
+                
+                if (Array.isArray(rawData)) {
+                    parsedData = rawData;
+                } else if (rawData && rawData.data && Array.isArray(rawData.data)) {
+                    parsedData = rawData.data;
+                } else if (rawData && rawData.records && Array.isArray(rawData.records)) {
+                    parsedData = rawData.records;
+                }
+
+                if (parsedData.length > 0) {
+                    if (Array.isArray(parsedData[0])) {
+                        let nameIdx = 1, scoreIdx = 2, timeIdx = 3; 
+                        
+                        if (typeof parsedData[0][1] === 'string' && parsedData[0][1].toLowerCase().includes('name')) {
+                            parsedData.shift(); 
+                        }
+                        
+                        let formatted = [];
+                        for (let i = 0; i < parsedData.length; i++) {
+                            if(parsedData[i][nameIdx] && parsedData[i][nameIdx].toString().trim() !== "") {
+                                formatted.push({
+                                    name: parsedData[i][nameIdx] || "Desconocido",
+                                    score: Number(parsedData[i][scoreIdx]) || 0,
+                                    timeAlive: Number(parsedData[i][timeIdx]) || 0
+                                });
+                            }
+                        }
+                        leaderboardData = formatted;
+                    } else {
+                        leaderboardData = parsedData.map(item => ({
+                            name: item.name || item.Name || item.NAME || "Desconocido",
+                            score: Number(item.score || item.Score || item.SCORE) || 0,
+                            timeAlive: Number(item.timeAlive || item.timealive || item.TimeAlive || item['Time Alive'] || item.time || item.Time || item.TIME) || 0
+                        }));
+                    }
+                    
+                    leaderboardData = leaderboardData.filter(r => r.name !== "Desconocido");
+
+                    leaderboardData.sort((a, b) => {
+                        if (b.score !== a.score) return b.score - a.score;
+                        return a.timeAlive - b.timeAlive;
+                    });
+                } else {
+                    leaderboardData = [];
+                }
+                
+                document.getElementById('offline-badge').classList.add('hidden');
+                updateLeaderboardUI();
+            } catch (e) {
+                console.error("Error obteniendo datos de Google Sheets:", e);
+                document.getElementById('offline-badge').classList.remove('hidden');
+                document.getElementById('offline-text').innerText = "Sin conexión a Google Sheets.";
+                updateLeaderboardUI(); 
+            }
+        }
+
+        function startLeaderboardPolling() {
+            if(leaderboardPollingInterval) clearInterval(leaderboardPollingInterval);
+            fetchLeaderboardData(); 
+            leaderboardPollingInterval = setInterval(fetchLeaderboardData, 10000); 
+        }
+
+        function stopLeaderboardPolling() {
+            if(leaderboardPollingInterval) clearInterval(leaderboardPollingInterval);
+        }
+
+        function updateLeaderboardUI() {
+            const miniList = document.getElementById('mini-leaderboard-list');
+            if (miniList) {
+                const top5 = leaderboardData.slice(0, 5);
+                miniList.innerHTML = '';
+                if (top5.length === 0) {
+                    miniList.innerHTML = '<p class="text-emerald-200/60 text-center mt-4">¡Sin registros aún! ¡Sé el primero!</p>';
+                } else {
+                    top5.forEach((row, index) => {
+                        const div = document.createElement('div');
+                        div.className = 'flex justify-between items-center bg-white/5 px-4 py-3 rounded-xl border border-white/5';
+                        const isTop1 = index === 0 ? 'text-yellow-400 font-bold' : 'text-gray-200';
+                        
+                        div.innerHTML = `
+                            <div class="flex items-center space-x-3 truncate">
+                                <span class="${isTop1} text-lg">#${index + 1}</span>
+                                <span class="font-medium truncate max-w-[120px] text-left text-base">${row.name}</span>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <span class="text-emerald-300 font-bold text-sm">${row.score} pts</span>
+                                <span class="text-gray-400 text-xs">${row.timeAlive}s</span>
+                            </div>
+                        `;
+                        miniList.appendChild(div);
+                    });
+                }
+            }
+
+            const listEl = document.getElementById('leaderboard-list');
+            if (listEl) {
+                const top50 = leaderboardData.slice(0, 50); 
+                listEl.innerHTML = '';
+                if (top50.length === 0) {
+                    listEl.innerHTML = '<tr><td colspan="4" class="text-center p-6 text-emerald-300/50">Cargando registros...</td></tr>';
+                } else {
+                    top50.forEach((row, index) => {
+                        const tr = document.createElement('tr');
+                        tr.className = 'border-b border-emerald-900/40 hover:bg-emerald-900/30 transition-colors last:border-0';
+                        
+                        let rankStyle = 'text-emerald-500 font-bold text-lg md:text-xl';
+                        if (index === 0) rankStyle = 'text-yellow-400 font-black text-xl md:text-2xl drop-shadow-md';
+                        if (index === 1) rankStyle = 'text-slate-300 font-black text-lg md:text-xl drop-shadow-sm';
+                        if (index === 2) rankStyle = 'text-orange-400 font-black text-lg md:text-xl drop-shadow-sm';
+
+                        tr.innerHTML = `
+                            <td class="p-4 md:px-6 ${rankStyle}">#${index + 1}</td>
+                            <td class="p-4 md:px-6 font-bold text-white truncate max-w-[120px] md:max-w-[200px]">${row.name}</td>
+                            <td class="p-4 md:px-6 text-center font-black text-emerald-300 text-lg md:text-xl">${row.score}</td>
+                            <td class="p-4 md:px-6 text-right text-emerald-100/60">${row.timeAlive}s</td>
+                        `;
+                        listEl.appendChild(tr);
+                    });
+                }
+            }
+        }
+
+        window.showLeaderboard = function(returnScreen = 'welcome-screen') {
+            document.getElementById('lb-back-btn').onclick = () => window.switchScreen(returnScreen);
+            window.switchScreen('leaderboard-screen');
+        }
+
+        renderHearts();
+        startLeaderboardPolling();
+    </script>
+</body>
+</html>
